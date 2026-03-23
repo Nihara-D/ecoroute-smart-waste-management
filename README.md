@@ -1,5 +1,5 @@
 # 🌿 EcoRoute — Smart Waste Management
 
-## 🌐 [Click here to view the full interactive project page →](https://nihara-d.github.io/ecoroute-smart-waste-management/)
+## 🌐 [View Interactive Project Page →](https://final-black-9zd7gnuc2q.edgeone.app)
 
 IT4020 Assignment 2 | SLIIT | 2026
