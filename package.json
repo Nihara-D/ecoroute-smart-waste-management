@@ -1,0 +1,20 @@
+{
+  "name": "ecoroute-system",
+  "version": "1.0.0",
+  "description": "EcoRoute Smart Waste Management - Microservices Architecture",
+  "scripts": {
+    "install:all": "npm install && cd bin-service && npm install && cd ../dispatch-service && npm install && cd ../citizen-service && npm install && cd ../ewaste-service && npm install && cd ../api-gateway && npm install",
+    "start:bin": "cd bin-service && npm start",
+    "start:dispatch": "cd dispatch-service && npm start",
+    "start:citizen": "cd citizen-service && npm start",
+    "start:ewaste": "cd ewaste-service && npm start",
+    "start:gateway": "cd api-gateway && npm start",
+    "dev:bin": "cd bin-service && npm run dev",
+    "dev:dispatch": "cd dispatch-service && npm run dev",
+    "dev:citizen": "cd citizen-service && npm run dev",
+    "dev:ewaste": "cd ewaste-service && npm run dev",
+    "dev:gateway": "cd api-gateway && npm run dev"
+  },
+  "author": "EcoRoute Team - SLIIT IT4020",
+  "license": "ISC"
+}
