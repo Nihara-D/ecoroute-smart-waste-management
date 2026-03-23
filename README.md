@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=00FF41&center=true&vCenter=true&width=435&lines=🌿+ECOROUTE+INITIALIZING...;SMART+WASTE+MANAGEMENT+SYSTEM;MICROSERVICES+ARCHITECTURE+ACTIVE;API+GATEWAY+RUNNING+ON+PORT+3000;4+SERVICES+DEPLOYED+SUCCESSFULLY;SWAGGER+DOCS+AVAILABLE+%E2%9C%85;IT4020+%7C+SLIIT+%7C+2026" alt="EcoRoute Typing SVG" />
+<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=00FF41&center=true&vCenter=true&width=435&lines= +ECOROUTE+INITIALIZING...;SMART+WASTE+MANAGEMENT+SYSTEM;MICROSERVICES+ARCHITECTURE+ACTIVE;API+GATEWAY+RUNNING+ON+PORT+3000;4+SERVICES+DEPLOYED+SUCCESSFULLY;SWAGGER+DOCS+AVAILABLE+%E2%9C%85;IT4020+%7C+SLIIT+%7C+2026" alt="EcoRoute Typing SVG" />
 </p>
 
 <p align="center">
