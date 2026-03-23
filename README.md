@@ -8,7 +8,9 @@
   <img src="https://img.shields.io/badge/SLIIT-003087?style=for-the-badge&logoColor=white"/>
 </p>
 
+<p align="center">
 <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=0066FF&center=true&vCenter=true&width=600&lines=ECOROUTE+INITIALIZING...;SMART+WASTE+MANAGEMENT+SYSTEM;MICROSERVICES+ARCHITECTURE+ACTIVE;API+GATEWAY+ON+PORT+3000;4+SERVICES+DEPLOYED;IT4020+%7C+SLIIT+%7C+2026" alt="Typing SVG" />
+</p>
 
 <p align="center">
   <a href="https://final-black-9zd7gnuc2q.edgeone.app">
