@@ -48,7 +48,7 @@
 | 1 | Sewwandi M.P.S.S.S. | 🗑️ Smart Bin Management | 3001 |
 | 2 | Hansika J.A.J. | 🚛 Logistics & Dispatch | 3002 |
 | 3 | Dayarathnne S.H.N.R. | 🏆 Citizen Engagement & Rewards | 3003 |
-| 4 | Gunarathene A.A.D.T. | ☢️ Hazardous & E-Waste Tracker | 3004 |
+| 4 | Gunarathne A.A.D.T. | ☢️ Hazardous & E-Waste Tracker | 3004 |
 
 ---
 
