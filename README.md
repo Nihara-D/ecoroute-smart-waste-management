@@ -181,5 +181,5 @@ ecoroute/
 ---
 
 <p align="center">
-  <i>EcoRoute · IT4020 Assignment 2 · SLIIT · Year 4 Semester 1/2 · 2026</i>
+  <i>EcoRoute · IT4020 Assignment 2 · SLIIT · Year 4 Semester 2 · 2026</i>
 </p>
