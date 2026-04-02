@@ -1,3 +1,5 @@
+require('dotenv').config();
+const connectDB = require('./config/db');
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -6,6 +8,7 @@ const swaggerUi = require('swagger-ui-express');
 const ewasteRoutes = require('./routes/ewasteRoutes');
 
 const app = express();
+connectDB();
 const PORT = process.env.PORT || 3004;
 
 app.use(cors());

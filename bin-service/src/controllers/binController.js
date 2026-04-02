@@ -1,106 +1,51 @@
-const store = require('../models/binStore');
+const Bin = require('../models/Bin');
+const Notification = require('../models/Notification');
 
-const getAllBins = (req, res) => {
-  const { zone, type, status } = req.query;
-  let bins = store.getBins();
 
-  if (zone) bins = bins.filter(b => b.zone === zone);
-  if (type) bins = bins.filter(b => b.type === type);
-  if (status) bins = bins.filter(b => b.status === status);
-
-  res.json({
-    success: true,
-    count: bins.length,
-    data: bins
-  });
+const getAllBins = async (req, res) => {
+  try {
+    const { zone, type, status } = req.query;
+    let query = {};
+    if(zone) query.zone = zone; if(type) query.type = type; if(status) query.status = status;
+    const bins = await Bin.find(query);
+    res.json({ success: true, count: bins.length, data: bins });
+  } catch(e) { res.status(500).json({ success: false, message: e.message }); }
+};
+const getBinById = async (req, res) => {
+  try { 
+     const bin = await Bin.findOne({id: req.params.id}); 
+     if(!bin) return res.status(404).json({ success: false, message: 'Not found' });
+     res.json({ success: true, data: bin });
+  } catch(e) { res.status(500).json({ success: false, message: e.message }); }
+};
+const createBin = async (req, res) => {
+  try {
+     const bin = await Bin.create({...req.body, capacity_liters: req.body.capacity_liters || 240});
+     res.status(201).json({ success: true, data: bin, message: 'registered' });
+  } catch(e) { res.status(500).json({ success: false, message: e.message }); }
+};
+const updateFillLevel = async (req, res) => {
+  try {
+     const { fill_level } = req.body;
+     const bin = await Bin.findOne({id: req.params.id});
+     if(!bin) return res.status(404).json({ success: false, message: 'Not found' });
+     bin.fill_level = fill_level;
+     let notification = null, triggered = false;
+     if(fill_level >= 80) {
+        bin.status = 'full'; triggered = true;
+        notification = await Notification.create({bin_id: bin.id, bin_name: bin.name, fill_level, zone: bin.zone, message: 'ALERT full'});
+     } else { bin.status = fill_level < 10 ? 'empty' : 'active'; }
+     await bin.save();
+     res.json({ success: true, data: bin, threshold_triggered: triggered, notification });
+  } catch(e) { res.status(500).json({ success: false, message: e.message }); }
+};
+const getFullBins = async (req, res) => {
+  try { const bins = await Bin.find({fill_level: {$gte: 80}}); res.json({ success: true, count: bins.length, data: bins }); } catch(e) {}
+};
+const getNotifications = async (req, res) => {
+  try { const n = await Notification.find(); res.json({ success: true, data: n }); } catch(e) {}
+};
+const deleteBin = async (req, res) => {
+  try { await Bin.findOneAndDelete({id: req.params.id}); res.json({ success: true }); } catch(e) {}
 };
 
-const getBinById = (req, res) => {
-  const bin = store.getBinById(req.params.id);
-  if (!bin) {
-    return res.status(404).json({ success: false, message: 'Bin not found' });
-  }
-  res.json({ success: true, data: bin });
-};
-
-const createBin = (req, res) => {
-  const { name, location, type, capacity_liters, sensor_id, zone } = req.body;
-
-  if (!name || !location || !type || !zone) {
-    return res.status(400).json({
-      success: false,
-      message: 'Missing required fields: name, location, type, zone'
-    });
-  }
-
-  const bin = store.createBin({ name, location, type, capacity_liters: capacity_liters || 240, sensor_id, zone });
-  res.status(201).json({ success: true, message: 'Bin registered successfully', data: bin });
-};
-
-const updateFillLevel = (req, res) => {
-  const { fill_level } = req.body;
-
-  if (fill_level === undefined || fill_level < 0 || fill_level > 100) {
-    return res.status(400).json({
-      success: false,
-      message: 'fill_level must be a number between 0 and 100'
-    });
-  }
-
-  const result = store.updateFillLevel(req.params.id, fill_level);
-  if (!result) {
-    return res.status(404).json({ success: false, message: 'Bin not found' });
-  }
-
-  const response = {
-    success: true,
-    message: result.threshold_triggered
-      ? `Bin updated. THRESHOLD ALERT: Bin is at ${fill_level}% - Dispatch notification sent!`
-      : `Bin fill level updated to ${fill_level}%`,
-    data: result.bin,
-    threshold_triggered: result.threshold_triggered
-  };
-
-  if (result.notification) {
-    response.notification = result.notification;
-  }
-
-  res.json(response);
-};
-
-const getFullBins = (req, res) => {
-  const bins = store.getFullBins();
-  res.json({
-    success: true,
-    count: bins.length,
-    message: `${bins.length} bin(s) require immediate collection`,
-    data: bins
-  });
-};
-
-const getNotifications = (req, res) => {
-  const notifications = store.getNotifications();
-  res.json({
-    success: true,
-    count: notifications.length,
-    data: notifications
-  });
-};
-
-const deleteBin = (req, res) => {
-  const deleted = store.deleteBin(req.params.id);
-  if (!deleted) {
-    return res.status(404).json({ success: false, message: 'Bin not found' });
-  }
-  res.json({ success: true, message: 'Bin deleted successfully' });
-};
-
-module.exports = {
-  getAllBins,
-  getBinById,
-  createBin,
-  updateFillLevel,
-  getFullBins,
-  getNotifications,
-  deleteBin
-};

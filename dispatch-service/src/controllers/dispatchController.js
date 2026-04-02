@@ -1,104 +1,39 @@
-const store = require('../models/dispatchStore');
 
-const getActiveTasks = (req, res) => {
-  const tasks = store.getActiveTasks();
-  res.json({
-    success: true,
-    count: tasks.length,
-    data: tasks
-  });
-};
+const Truck = require('../models/Truck');
+const Task = require('../models/Task');
+const axios = require('axios');
 
-const getAllTasks = (req, res) => {
-  const tasks = store.getTasks();
-  res.json({
-    success: true,
-    count: tasks.length,
-    data: tasks
-  });
-};
+const getTrucks = async (req, res) => { const t = await Truck.find(); res.json({ success: true, data: t }); };
+const getTruckById = async (req, res) => { const t = await Truck.findOne({id: req.params.id}); res.json({ success: true, data: t }); };
+const getTasks = async (req, res) => { const t = await Task.find(); res.json({ success: true, data: t }); };
+const getTaskById = async (req, res) => { const t = await Task.findOne({id: req.params.id}); res.json({ success: true, data: t }); };
+const getActiveTasks = async (req, res) => { const t = await Task.find({status: {$ne: 'completed'}}); res.json({ success: true, data: t }); };
 
-const getAllTrucks = (req, res) => {
-  const trucks = store.getTrucks();
-  const { status } = req.query;
-  const filtered = status ? trucks.filter(t => t.status === status) : trucks;
-  res.json({
-    success: true,
-    count: filtered.length,
-    data: filtered
-  });
-};
-
-const assignDispatch = (req, res) => {
-  const { bins, notes } = req.body;
-
-  if (!bins || !Array.isArray(bins) || bins.length === 0) {
-    return res.status(400).json({
-      success: false,
-      message: 'bins array is required with at least one bin'
+const assignTask = async (req, res) => {
+  try {
+    const { bin_ids, notes } = req.body;
+    const trucks = await Truck.find({status: 'available'});
+    if(trucks.length === 0) return res.status(400).json({ success: false, message: 'No trucks available' });
+    const truck = trucks[0]; // Simple selection for now
+    truck.status = 'on-route';
+    await truck.save();
+    
+    const task = await Task.create({
+      truck_id: truck.id, truck_plate: truck.plate, driver: truck.driver,
+      bin_ids: bin_ids || [], status: 'in-progress', assigned_at: new Date(), notes: notes || 'Auto-dispatched'
     });
-  }
-
-  const result = store.assignTask(bins, notes);
-
-  if (result.error) {
-    return res.status(503).json({
-      success: false,
-      message: result.error
-    });
-  }
-
-  res.status(201).json({
-    success: true,
-    message: 'Collection task assigned successfully',
-    data: {
-      task: result.task,
-      assigned_truck: result.truck
-    }
-  });
+    res.json({ success: true, data: { task, truck } });
+  } catch(e) { res.status(500).json({ success: false, message: e.message }); }
 };
-
-const completeTask = (req, res) => {
-  const task = store.completeTask(req.params.id);
-  if (!task) {
-    return res.status(404).json({ success: false, message: 'Task not found' });
-  }
-  res.json({
-    success: true,
-    message: 'Task marked as completed. Truck is now available.',
-    data: task
-  });
+const completeTask = async (req, res) => {
+  try {
+    const task = await Task.findOne({id: req.params.id});
+    if(!task) return res.status(404).json({ success: false });
+    task.status = 'completed'; task.completed_at = new Date(); await task.save();
+    
+    const truck = await Truck.findOne({id: task.truck_id});
+    if(truck) { truck.status = 'available'; truck.current_load = 0; await truck.save(); }
+    res.json({ success: true, data: task });
+  } catch(e) { res.status(500).json({ success: false, message: e.message }); }
 };
-
-const getTaskById = (req, res) => {
-  const task = store.getTaskById(req.params.id);
-  if (!task) {
-    return res.status(404).json({ success: false, message: 'Task not found' });
-  }
-  res.json({ success: true, data: task });
-};
-
-const getFleetStatus = (req, res) => {
-  const trucks = store.getTrucks();
-  const summary = {
-    total: trucks.length,
-    available: trucks.filter(t => t.status === 'available').length,
-    on_route: trucks.filter(t => t.status === 'on-route').length,
-    maintenance: trucks.filter(t => t.status === 'maintenance').length
-  };
-  res.json({
-    success: true,
-    fleet_summary: summary,
-    data: trucks
-  });
-};
-
-module.exports = {
-  getActiveTasks,
-  getAllTasks,
-  getAllTrucks,
-  assignDispatch,
-  completeTask,
-  getTaskById,
-  getFleetStatus
-};
+module.exports = { getTrucks, getTruckById, getTasks, getTaskById, getActiveTasks, assignTask, completeTask };

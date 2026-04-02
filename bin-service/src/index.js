@@ -1,3 +1,5 @@
+require('dotenv').config();
+const connectDB = require('./config/db');
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -7,6 +9,7 @@ const swaggerUi = require('swagger-ui-express');
 const binRoutes = require('./routes/binRoutes');
 
 const app = express();
+connectDB();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
