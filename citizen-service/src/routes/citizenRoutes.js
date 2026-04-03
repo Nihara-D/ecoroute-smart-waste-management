@@ -169,7 +169,7 @@ router.get('/rewards/catalog', ctrl.getRewardsCatalog);
  *       200:
  *         description: Redemption history
  */
-router.get('/rewards/redemptions', ctrl.getRedemptionHistory);
+router.get('/rewards/redemptions', ctrl.getRedemptions);
 
 /**
  * @swagger

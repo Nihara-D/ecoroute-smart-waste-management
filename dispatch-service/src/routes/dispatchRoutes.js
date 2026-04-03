@@ -31,7 +31,7 @@ router.get('/tasks/active', ctrl.getActiveTasks);
  *       200:
  *         description: All tasks
  */
-router.get('/tasks', ctrl.getAllTasks);
+router.get('/tasks', ctrl.getTasks);
 
 /**
  * @swagger
@@ -124,7 +124,7 @@ router.put('/tasks/:id/complete', ctrl.completeTask);
  *       503:
  *         description: No trucks available
  */
-router.post('/dispatch/assign', ctrl.assignDispatch);
+router.post('/dispatch/assign', ctrl.assignTask);
 
 /**
  * @swagger
@@ -143,7 +143,7 @@ router.post('/dispatch/assign', ctrl.assignDispatch);
  *       200:
  *         description: Fleet details with summary
  */
-router.get('/trucks', ctrl.getAllTrucks);
+router.get('/trucks', ctrl.getTrucks);
 
 /**
  * @swagger
