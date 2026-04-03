@@ -2,6 +2,7 @@ const Bin = require('../models/Bin');
 const Notification = require('../models/Notification');
 
 
+
 const getAllBins = async (req, res) => {
   try {
     const { zone, type, status } = req.query;
@@ -49,3 +50,12 @@ const deleteBin = async (req, res) => {
   try { await Bin.findOneAndDelete({id: req.params.id}); res.json({ success: true }); } catch(e) {}
 };
 
+module.exports = {
+  getAllBins,
+  getBinById,
+  createBin,
+  updateFillLevel,
+  getFullBins,
+  getNotifications,
+  deleteBin
+};

@@ -36,4 +36,14 @@ const completeTask = async (req, res) => {
     res.json({ success: true, data: task });
   } catch(e) { res.status(500).json({ success: false, message: e.message }); }
 };
-module.exports = { getTrucks, getTruckById, getTasks, getTaskById, getActiveTasks, assignTask, completeTask };
+const getFleetStatus = async (req, res) => {
+  try {
+    const total = await Truck.countDocuments();
+    const available = await Truck.countDocuments({status: 'available'});
+    const onRoute = await Truck.countDocuments({status: 'on-route'});
+    const maintenance = await Truck.countDocuments({status: 'maintenance'});
+    res.json({ success: true, data: { total, available, onRoute, maintenance } });
+  } catch(e) { res.status(500).json({ success: false, message: e.message }); }
+};
+
+module.exports = { getTrucks, getTruckById, getTasks, getTaskById, getActiveTasks, assignTask, completeTask, getFleetStatus };
