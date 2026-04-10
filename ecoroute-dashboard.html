@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoRoute — Smart Waste Management</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --eco-green: #1a7a4a;
+    --eco-green-light: #e8f5ee;
+    --eco-green-mid: #2daa66;
+    --eco-teal: #0d6e6e;
+    --eco-teal-light: #e0f4f4;
+    --eco-amber: #c47a1c;
+    --eco-amber-light: #fef3e0;
+    --eco-red: #b83232;
+    --eco-red-light: #fdeaea;
+    --eco-blue: #1e5fa8;
+    --eco-blue-light: #e8f0fb;
+    --eco-purple: #5c3d9e;
+    --eco-purple-light: #f0ecfd;
+    --bg: #f4f7f5;
+    --surface: #ffffff;
+    --surface2: #f0f4f1;
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.14);
+    --text: #1a2318;
+    --text-muted: #5a6b60;
+    --text-faint: #8a9b90;
+    --sidebar-w: 220px;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: var(--eco-green);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 100;
+    padding: 0 0 24px;
+  }
+
+  .sidebar-brand {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    margin-bottom: 8px;
+  }
+
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+
+  .brand-icon {
+    width: 32px; height: 32px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .brand-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.3px;
+  }
+
+  .brand-tagline {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .nav-section {
+    padding: 0 12px;
+    margin-bottom: 4px;
+  }
+
+  .nav-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 12px 8px 6px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: rgba(255,255,255,0.7);
+    font-size: 13.5px;
+    font-weight: 400;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+    position: relative;
+  }
+
+  .nav-item:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+  }
+
+  .nav-item.active {
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .nav-icon {
+    width: 18px; height: 18px;
+    opacity: 0.8;
+    flex-shrink: 0;
+  }
+
+  .nav-badge {
+    margin-left: auto;
+    background: #ff5c5c;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 20px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 16px 12px 0;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .sys-status {
+    background: rgba(255,255,255,0.08);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+  }
+
+  .sys-status-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .sys-status-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 4px;
+  }
+
+  .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot.green { background: #4ade80; }
+  .dot.amber { background: #fbbf24; }
+  .dot.red { background: #f87171; }
+
+  /* ─── MAIN CONTENT ─── */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .topbar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .page-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .topbar-time {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-faint);
+    background: var(--surface2);
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  .btn {
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text);
+    transition: all 0.15s;
+  }
+
+  .btn:hover { background: var(--surface2); }
+
+  .btn.primary {
+    background: var(--eco-green);
+    color: #fff;
+    border-color: var(--eco-green);
+  }
+
+  .btn.primary:hover { background: #155e39; }
+
+  /* ─── PAGE CONTENT ─── */
+  .content {
+    padding: 24px 28px;
+    flex: 1;
+  }
+
+  /* ─── VIEWS ─── */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* ─── KPI CARDS ─── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+  }
+
+  .kpi-card.green::before { background: var(--eco-green-mid); }
+  .kpi-card.amber::before { background: var(--eco-amber); }
+  .kpi-card.red::before { background: var(--eco-red); }
+  .kpi-card.blue::before { background: var(--eco-blue); }
+  .kpi-card.teal::before { background: var(--eco-teal); }
+  .kpi-card.purple::before { background: var(--eco-purple); }
+
+  .kpi-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 8px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .kpi-value {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .kpi-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .trend-up { color: var(--eco-green); }
+  .trend-down { color: var(--eco-red); }
+
+  /* ─── TWO-COL GRID ─── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  /* ─── PANEL ─── */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .panel-title {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .panel-action {
+    font-size: 12px;
+    color: var(--eco-green);
+    cursor: pointer;
+    font-weight: 500;
+  }
+
+  .panel-body {
+    padding: 16px 18px;
+  }
+
+  /* ─── BIN GRID ─── */
+  .bin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    padding: 16px 18px;
+  }
+
+  .bin-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .bin-card:hover {
+    border-color: var(--eco-green);
+    background: var(--eco-green-light);
+  }
+
+  .bin-id {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-bottom: 6px;
+  }
+
+  .bin-location {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fill-bar-wrap {
+    background: var(--surface2);
+    border-radius: 4px;
+    height: 6px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+
+  .fill-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s;
+  }
+
+  .fill-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .fill-pct {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  /* ─── TABLE ─── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .data-table th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: 'Space Mono', monospace;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+
+  .data-table td {
+    padding: 11px 14px;
+    font-size: 13px;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tbody tr:hover { background: var(--surface2); }
+
+  /* ─── BADGES ─── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .badge.green { background: var(--eco-green-light); color: var(--eco-green); }
+  .badge.amber { background: var(--eco-amber-light); color: var(--eco-amber); }
+  .badge.red { background: var(--eco-red-light); color: var(--eco-red); }
+  .badge.blue { background: var(--eco-blue-light); color: var(--eco-blue); }
+  .badge.teal { background: var(--eco-teal-light); color: var(--eco-teal); }
+  .badge.purple { background: var(--eco-purple-light); color: var(--eco-purple); }
+  .badge.gray { background: #f0f0ef; color: #5a5a58; }
+
+  /* ─── TIER BADGE ─── */
+  .tier-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .tier-bronze { background: #f5ead9; color: #8a5210; }
+  .tier-silver { background: #ebebea; color: #565654; }
+  .tier-gold { background: #fef3d0; color: #8a6a00; }
+
+  /* ─── PROGRESS RING ─── */
+  .progress-ring-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 18px;
+  }
+
+  /* ─── ALERT ITEM ─── */
+  .alert-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .alert-item:last-child { border-bottom: none; }
+
+  .alert-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .alert-text {
+    font-size: 13px;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .alert-time {
+    font-size: 11px;
+    color: var(--text-faint);
+    font-family: 'Space Mono', monospace;
+    white-space: nowrap;
+  }
+
+  /* ─── FORM ─── */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 12px;
+  }
+
+  .form-group.full { grid-column: 1/-1; }
+
+  label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-family: 'Space Mono', monospace;
+  }
+
+  input, select, textarea {
+    padding: 9px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 13.5px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--eco-green);
+  }
+
+  textarea { resize: vertical; min-height: 80px; }
+
+  .form-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    padding-top: 8px;
+  }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius);
+    width: 520px;
+    max-width: 95vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  }
+
+  .modal-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-title {
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .modal-close {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: var(--text-muted);
+  }
+
+  .modal-close:hover { background: var(--eco-red-light); color: var(--eco-red); }
+
+  .modal-body { padding: 20px; }
+
+  /* ─── CITIZEN PROFILE ─── */
+  .citizen-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .citizen-row:last-child { border-bottom: none; }
+
+  .citizen-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--eco-green-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--eco-green);
+    flex-shrink: 0;
+    font-family: 'Space Mono', monospace;
+  }
+
+  .citizen-info { flex: 1; min-width: 0; }
+
+  .citizen-name {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .citizen-email {
+    font-size: 12px;
+    color: var(--text-faint);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .citizen-pts {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--eco-green);
+  }
+
+  /* ─── CHART CONTAINER ─── */
+  .chart-container {
+    position: relative;
+    height: 200px;
+    padding: 0 18px 14px;
+  }
+
+  /* ─── MAP PLACEHOLDER ─── */
+  .map-zone {
+    background: var(--surface2);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-sm);
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-faint);
+    font-size: 12px;
+    gap: 8px;
+    margin: 12px 18px;
+  }
+
+  /* ─── BREADCRUMB ─── */
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-faint);
+    margin-bottom: 16px;
+  }
+
+  .breadcrumb span { color: var(--text-muted); }
+  .breadcrumb .sep { color: var(--text-faint); }
+
+  /* ─── SECTION HEADER ─── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .section-filters {
+    display: flex;
+    gap: 6px;
+  }
+
+  .filter-pill {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-muted);
+    transition: all 0.15s;
+  }
+
+  .filter-pill.active, .filter-pill:hover {
+    background: var(--eco-green);
+    color: #fff;
+    border-color: var(--eco-green);
+  }
+
+  /* ─── WASTE TYPE ICON ─── */
+  .waste-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  /* ─── HAZARD LEVEL STRIP ─── */
+  .hazard-strip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .hazard-strip:hover { border-color: var(--eco-green); }
+
+  /* ─── STAT ROW ─── */
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+
+  .stat-row:last-child { border-bottom: none; }
+  .stat-label { color: var(--text-muted); }
+  .stat-value { font-weight: 600; font-family: 'Space Mono', monospace; font-size: 12px; }
+
+  /* ─── TIMELINE ─── */
+  .timeline { padding: 0 2px; }
+
+  .timeline-item {
+    display: flex;
+    gap: 12px;
+    padding-bottom: 16px;
+    position: relative;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 16px;
+    bottom: 0;
+    width: 1px;
+    background: var(--border);
+  }
+
+  .timeline-item:last-child::before { display: none; }
+
+  .timeline-dot {
+    width: 15px; height: 15px;
+    border-radius: 50%;
+    border: 2px solid;
+    flex-shrink: 0;
+    margin-top: 1px;
+    background: var(--surface);
+    z-index: 1;
+  }
+
+  .timeline-dot.green { border-color: var(--eco-green-mid); background: var(--eco-green-light); }
+  .timeline-dot.amber { border-color: var(--eco-amber); background: var(--eco-amber-light); }
+  .timeline-dot.blue { border-color: var(--eco-blue); background: var(--eco-blue-light); }
+
+  .timeline-content { flex: 1; }
+
+  .timeline-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .timeline-meta {
+    font-size: 11px;
+    color: var(--text-faint);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--eco-green);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    z-index: 999;
+    transform: translateY(60px);
+    opacity: 0;
+    transition: all 0.3s;
+    max-width: 280px;
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ─── RESPONSIVE ADJUSTMENTS ─── */
+  @media (max-width: 1100px) {
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .two-col { grid-template-columns: 1fr; }
+    .three-col { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-logo">
+      <div class="brand-icon">ER</div>
+      <div class="brand-name">EcoRoute</div>
+    </div>
+    <div class="brand-tagline">Waste Management</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <div class="nav-item active" onclick="switchView('dashboard', this)">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/>
+        <rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/>
+      </svg>
+      Dashboard
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Services</div>
+    <div class="nav-item" onclick="switchView('bins', this)">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 6h12l-1 10H5L4 6z"/><path d="M2 4h16"/><path d="M8 4V2h4v2"/>
+      </svg>
+      Smart Bins
+      <span class="nav-badge" id="badge-bins">3</span>
+    </div>
+    <div class="nav-item" onclick="switchView('dispatch', this)">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M2 7h11l2 4H2V7z"/><path d="M13 7l3 4"/><circle cx="6" cy="14" r="1.5"/><circle cx="14" cy="14" r="1.5"/>
+      </svg>
+      Dispatch
+    </div>
+    <div class="nav-item" onclick="switchView('citizens', this)">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="7" cy="6" r="3"/><path d="M2 16c0-3.31 2.24-5 5-5s5 1.69 5 5"/>
+        <circle cx="14" cy="7" r="2.5"/><path d="M18 16c0-2.76-1.79-4-4-4"/>
+      </svg>
+      Citizens
+    </div>
+    <div class="nav-item" onclick="switchView('ewaste', this)">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M9 3H5L3 7v9h14V7l-2-4h-4"/><path d="M9 3v4h6"/><path d="M7 12h6"/>
+      </svg>
+      E-Waste
+    </div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Reports</div>
+    <div class="nav-item" onclick="switchView('analytics', this)">
+      <svg class="nav-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 14l4-5 3 2 4-6"/><rect x="2" y="2" width="16" height="16" rx="2"/>
+      </svg>
+      Analytics
+    </div>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="sys-status">
+      <div class="sys-status-label">System Status</div>
+      <div class="sys-status-row"><span class="dot green"></span>API Gateway :3000</div>
+      <div class="sys-status-row"><span class="dot green"></span>Bin Service :3001</div>
+      <div class="sys-status-row"><span class="dot green"></span>Dispatch :3002</div>
+      <div class="sys-status-row"><span class="dot green"></span>Citizen :3003</div>
+      <div class="sys-status-row"><span class="dot green"></span>E-Waste :3004</div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <div class="page-title" id="page-title">Dashboard Overview</div>
+    <div class="topbar-right">
+      <div class="topbar-time" id="clock">--:--:--</div>
+      <button class="btn primary" id="topbar-action" onclick="handleTopbarAction()">+ Register Bin</button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- ══════════ DASHBOARD ══════════ -->
+    <div class="view active" id="view-dashboard">
+      <div class="kpi-grid">
+        <div class="kpi-card green">
+          <div class="kpi-label">Total Bins</div>
+          <div class="kpi-value" id="kpi-total-bins">24</div>
+          <div class="kpi-sub"><span class="trend-up">↑ 4</span> this week</div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-label">Bins Full</div>
+          <div class="kpi-value" id="kpi-full-bins">3</div>
+          <div class="kpi-sub"><span class="trend-down">⚠ needs dispatch</span></div>
+        </div>
+        <div class="kpi-card blue">
+          <div class="kpi-label">Active Trucks</div>
+          <div class="kpi-value">5</div>
+          <div class="kpi-sub"><span>2 on-route · 3 available</span></div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label">Citizens</div>
+          <div class="kpi-value">1,248</div>
+          <div class="kpi-sub"><span class="trend-up">↑ 32</span> new today</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <!-- Bin Fill Levels -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Bin Fill Levels — Live</span>
+            <span class="panel-action" onclick="switchView('bins', document.querySelector('[onclick*=bins]'))">View all →</span>
+          </div>
+          <div class="chart-container">
+            <canvas id="fillChart" role="img" aria-label="Bar chart of bin fill levels across zones">Bin fill levels: Zone-A 85%, Zone-B 42%, Zone-C 91%, Zone-D 28%, Zone-E 76%</canvas>
+          </div>
+        </div>
+
+        <!-- Recent Alerts -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Threshold Alerts</span>
+            <span class="badge red">3 active</span>
+          </div>
+          <div class="panel-body">
+            <div class="alert-item">
+              <span class="alert-dot" style="background: var(--eco-red)"></span>
+              <div class="alert-text"><strong>BIN-003</strong> — 91% full · Zone-C, Kollupitiya</div>
+              <span class="alert-time">2m ago</span>
+            </div>
+            <div class="alert-item">
+              <span class="alert-dot" style="background: var(--eco-red)"></span>
+              <div class="alert-text"><strong>BIN-001</strong> — 85% full · Zone-A, Colombo 01</div>
+              <span class="alert-time">18m ago</span>
+            </div>
+            <div class="alert-item">
+              <span class="alert-dot" style="background: var(--eco-amber)"></span>
+              <div class="alert-text"><strong>BIN-005</strong> — 76% full · Zone-E, Wellawatte</div>
+              <span class="alert-time">42m ago</span>
+            </div>
+            <div class="alert-item">
+              <span class="alert-dot" style="background: var(--eco-green-mid)"></span>
+              <div class="alert-text"><strong>TRUCK-02</strong> completed route — 4 bins cleared</div>
+              <span class="alert-time">1h ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="three-col">
+        <!-- Waste Type Breakdown -->
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Waste by Type</span></div>
+          <div class="chart-container" style="height: 180px;">
+            <canvas id="wasteTypeChart" role="img" aria-label="Doughnut chart of waste types">Waste types: General 35%, Recyclable 40%, Organic 25%</canvas>
+          </div>
+          <div style="padding: 0 18px 14px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span style="display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-muted)"><span style="width: 10px; height: 10px; border-radius: 2px; background: #2daa66;"></span>Recyclable 40%</span>
+            <span style="display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-muted)"><span style="width: 10px; height: 10px; border-radius: 2px; background: #1e5fa8;"></span>General 35%</span>
+            <span style="display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-muted)"><span style="width: 10px; height: 10px; border-radius: 2px; background: #c47a1c;"></span>Organic 25%</span>
+          </div>
+        </div>
+
+        <!-- Fleet Status -->
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Fleet Status</span></div>
+          <div class="panel-body">
+            <div class="stat-row">
+              <span class="stat-label">Available</span>
+              <span class="stat-value" style="color: var(--eco-green)">3 trucks</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">On-Route</span>
+              <span class="stat-value" style="color: var(--eco-blue)">2 trucks</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Maintenance</span>
+              <span class="stat-value" style="color: var(--eco-amber)">0 trucks</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Active Tasks</span>
+              <span class="stat-value">2 tasks</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Completed Today</span>
+              <span class="stat-value">7 tasks</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Eco Points Summary -->
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Eco-Points Today</span></div>
+          <div class="panel-body">
+            <div class="stat-row">
+              <span class="stat-label">Points Awarded</span>
+              <span class="stat-value" style="color: var(--eco-green)">12,450 pts</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Points Redeemed</span>
+              <span class="stat-value" style="color: var(--eco-amber)">3,200 pts</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Waste Collected</span>
+              <span class="stat-value">248 kg</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Gold Tier Citizens</span>
+              <span class="stat-value">42</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Rewards Redeemed</span>
+              <span class="stat-value">16</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ BINS ══════════ -->
+    <div class="view" id="view-bins">
+      <div class="section-header">
+        <div class="section-title">Smart Bin Management</div>
+        <div class="section-filters">
+          <span class="filter-pill active" onclick="filterBins('all', this)">All</span>
+          <span class="filter-pill" onclick="filterBins('full', this)">Full ≥80%</span>
+          <span class="filter-pill" onclick="filterBins('recyclable', this)">Recyclable</span>
+          <span class="filter-pill" onclick="filterBins('organic', this)">Organic</span>
+        </div>
+      </div>
+
+      <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 20px;">
+        <div class="kpi-card green">
+          <div class="kpi-label">Total Registered</div>
+          <div class="kpi-value">24</div>
+          <div class="kpi-sub">across 6 zones</div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-label">Require Collection</div>
+          <div class="kpi-value">3</div>
+          <div class="kpi-sub">fill level ≥ 80%</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label">Avg Fill Level</div>
+          <div class="kpi-value">54%</div>
+          <div class="kpi-sub">across all active bins</div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom: 20px;">
+        <div class="panel-header">
+          <span class="panel-title">All Bins — Live Status</span>
+          <button class="btn primary" onclick="openModal('modal-register-bin')">+ Register Bin</button>
+        </div>
+        <div class="bin-grid" id="bin-grid">
+          <!-- injected by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ DISPATCH ══════════ -->
+    <div class="view" id="view-dispatch">
+      <div class="section-header">
+        <div class="section-title">Logistics & Dispatch</div>
+        <button class="btn primary" onclick="openModal('modal-assign-task')">+ Assign Task</button>
+      </div>
+
+      <div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 20px;">
+        <div class="kpi-card blue">
+          <div class="kpi-label">Active Tasks</div>
+          <div class="kpi-value">2</div>
+          <div class="kpi-sub">in progress</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Completed Today</div>
+          <div class="kpi-value">7</div>
+          <div class="kpi-sub">↑ 2 vs yesterday</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label">Available Trucks</div>
+          <div class="kpi-value">3</div>
+          <div class="kpi-sub">ready for dispatch</div>
+        </div>
+        <div class="kpi-card teal">
+          <div class="kpi-label">Total Fleet</div>
+          <div class="kpi-value">5</div>
+          <div class="kpi-sub">trucks registered</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Active Tasks</span></div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Task ID</th><th>Truck</th><th>Bins</th><th>Zone</th><th>Status</th><th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span style="font-family: 'Space Mono', monospace; font-size: 12px;">TSK-001</span></td>
+                <td>TRUCK-02</td>
+                <td>BIN-001, BIN-003</td>
+                <td>Zone-A, C</td>
+                <td><span class="badge blue">On Route</span></td>
+                <td><button class="btn" onclick="completeTask('TSK-001')">Complete</button></td>
+              </tr>
+              <tr>
+                <td><span style="font-family: 'Space Mono', monospace; font-size: 12px;">TSK-002</span></td>
+                <td>TRUCK-04</td>
+                <td>BIN-005</td>
+                <td>Zone-E</td>
+                <td><span class="badge amber">Dispatched</span></td>
+                <td><button class="btn" onclick="completeTask('TSK-002')">Complete</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Fleet Overview</span></div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Truck ID</th><th>Driver</th><th>Capacity</th><th>Status</th></tr>
+            </thead>
+            <tbody id="fleet-table">
+              <tr><td><span style="font-family:'Space Mono',monospace;font-size:12px">TRUCK-01</span></td><td>R. Perera</td><td>5,000 kg</td><td><span class="badge green">Available</span></td></tr>
+              <tr><td><span style="font-family:'Space Mono',monospace;font-size:12px">TRUCK-02</span></td><td>S. Silva</td><td>7,000 kg</td><td><span class="badge blue">On Route</span></td></tr>
+              <tr><td><span style="font-family:'Space Mono',monospace;font-size:12px">TRUCK-03</span></td><td>D. Fernando</td><td>5,000 kg</td><td><span class="badge green">Available</span></td></tr>
+              <tr><td><span style="font-family:'Space Mono',monospace;font-size:12px">TRUCK-04</span></td><td>K. Jayawardena</td><td>6,000 kg</td><td><span class="badge amber">Dispatched</span></td></tr>
+              <tr><td><span style="font-family:'Space Mono',monospace;font-size:12px">TRUCK-05</span></td><td>M. Wickramasinghe</td><td>4,500 kg</td><td><span class="badge green">Available</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top: 16px;">
+        <div class="panel-header"><span class="panel-title">Recent Task History</span></div>
+        <table class="data-table">
+          <thead>
+            <tr><th>Task ID</th><th>Truck</th><th>Bins Cleared</th><th>Completed</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span style="font-family:'Space Mono',monospace;font-size:12px">TSK-098</span></td><td>TRUCK-01</td><td>4 bins</td><td>Today 10:22</td><td>Routine collection</td></tr>
+            <tr><td><span style="font-family:'Space Mono',monospace;font-size:12px">TSK-097</span></td><td>TRUCK-03</td><td>3 bins</td><td>Today 09:05</td><td>Zone-B urgent</td></tr>
+            <tr><td><span style="font-family:'Space Mono',monospace;font-size:12px">TSK-096</span></td><td>TRUCK-02</td><td>2 bins</td><td>Yesterday 16:30</td><td>Organic overflow</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════ CITIZENS ══════════ -->
+    <div class="view" id="view-citizens">
+      <div class="section-header">
+        <div class="section-title">Citizen Engagement & Rewards</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn" onclick="openModal('modal-add-points')">+ Add Points</button>
+          <button class="btn primary" onclick="openModal('modal-register-citizen')">+ Register Citizen</button>
+        </div>
+      </div>
+
+      <div class="kpi-grid" style="margin-bottom:20px">
+        <div class="kpi-card green">
+          <div class="kpi-label">Total Citizens</div>
+          <div class="kpi-value">1,248</div>
+          <div class="kpi-sub">↑ 32 this week</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label">Total Eco-Points</div>
+          <div class="kpi-value">248K</div>
+          <div class="kpi-sub">issued overall</div>
+        </div>
+        <div class="kpi-card teal">
+          <div class="kpi-label">Rewards Redeemed</div>
+          <div class="kpi-value">416</div>
+          <div class="kpi-sub">this month</div>
+        </div>
+        <div class="kpi-card purple">
+          <div class="kpi-label">Gold Tier</div>
+          <div class="kpi-value">42</div>
+          <div class="kpi-sub">elite recyclers</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Top Citizens by Eco-Points</span></div>
+          <div class="panel-body" id="citizens-list">
+            <!-- injected by JS -->
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Rewards Catalog</span></div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Reward</th><th>Points</th><th>Stock</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Bus Pass (1 Month)</td><td><span style="font-family:'Space Mono',monospace">500 pts</span></td><td><span class="badge green">18 left</span></td><td><button class="btn" onclick="showToast('Redeem form opening...')">Redeem</button></td></tr>
+              <tr><td>Supermarket Voucher</td><td><span style="font-family:'Space Mono',monospace">300 pts</span></td><td><span class="badge green">42 left</span></td><td><button class="btn" onclick="showToast('Redeem form opening...')">Redeem</button></td></tr>
+              <tr><td>Tree Planting Cert.</td><td><span style="font-family:'Space Mono',monospace">150 pts</span></td><td><span class="badge green">Unlimited</span></td><td><button class="btn" onclick="showToast('Redeem form opening...')">Redeem</button></td></tr>
+              <tr><td>Compost Starter Kit</td><td><span style="font-family:'Space Mono',monospace">200 pts</span></td><td><span class="badge amber">5 left</span></td><td><button class="btn" onclick="showToast('Redeem form opening...')">Redeem</button></td></tr>
+              <tr><td>Solar Lamp</td><td><span style="font-family:'Space Mono',monospace">1000 pts</span></td><td><span class="badge red">2 left</span></td><td><button class="btn" onclick="showToast('Redeem form opening...')">Redeem</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top: 16px;">
+        <div class="panel-header"><span class="panel-title">Points per Waste Type</span></div>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;padding:14px 18px;">
+          <div style="text-align:center;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm)">
+            <div style="font-size:20px;margin-bottom:6px">🔋</div>
+            <div style="font-family:'Space Mono',monospace;font-weight:700;font-size:14px;color:var(--eco-purple)">100</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Electronic</div>
+          </div>
+          <div style="text-align:center;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm)">
+            <div style="font-size:20px;margin-bottom:6px">⚙️</div>
+            <div style="font-family:'Space Mono',monospace;font-weight:700;font-size:14px;color:var(--eco-blue)">60</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Metal</div>
+          </div>
+          <div style="text-align:center;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm)">
+            <div style="font-size:20px;margin-bottom:6px">🧴</div>
+            <div style="font-family:'Space Mono',monospace;font-weight:700;font-size:14px;color:var(--eco-teal)">50</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Plastic</div>
+          </div>
+          <div style="text-align:center;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm)">
+            <div style="font-size:20px;margin-bottom:6px">🫙</div>
+            <div style="font-family:'Space Mono',monospace;font-weight:700;font-size:14px;color:var(--eco-green)">40</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Glass</div>
+          </div>
+          <div style="text-align:center;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm)">
+            <div style="font-size:20px;margin-bottom:6px">📄</div>
+            <div style="font-family:'Space Mono',monospace;font-weight:700;font-size:14px;color:var(--eco-amber)">30</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Paper</div>
+          </div>
+          <div style="text-align:center;padding:12px;border:1px solid var(--border);border-radius:var(--radius-sm)">
+            <div style="font-size:20px;margin-bottom:6px">🌿</div>
+            <div style="font-family:'Space Mono',monospace;font-weight:700;font-size:14px;color:var(--eco-red)">20</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:2px">Organic</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ E-WASTE ══════════ -->
+    <div class="view" id="view-ewaste">
+      <div class="section-header">
+        <div class="section-title">Hazardous & E-Waste Tracker</div>
+        <button class="btn primary" onclick="openModal('modal-log-ewaste')">+ Log E-Waste</button>
+      </div>
+
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
+        <div class="kpi-card purple">
+          <div class="kpi-label">Total Logged</div>
+          <div class="kpi-value">87</div>
+          <div class="kpi-sub">items this month</div>
+        </div>
+        <div class="kpi-card amber">
+          <div class="kpi-label">In Transit</div>
+          <div class="kpi-value">12</div>
+          <div class="kpi-sub">to processing centers</div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-label">Critical Hazard</div>
+          <div class="kpi-value">4</div>
+          <div class="kpi-sub">require immediate action</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Processed</div>
+          <div class="kpi-value">71</div>
+          <div class="kpi-sub">compliant disposal</div>
+        </div>
+      </div>
+
+      <div class="two-col" style="margin-bottom:16px">
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">E-Waste Log</span></div>
+          <table class="data-table">
+            <thead>
+              <tr><th>Tracking</th><th>Type</th><th>Weight</th><th>Hazard</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span style="font-family:'Space Mono',monospace;font-size:11px">EW-2026-001</span></td>
+                <td>Electronic</td><td>12.5 kg</td>
+                <td><span class="badge amber">Medium</span></td>
+                <td><span class="badge blue">Processing</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:'Space Mono',monospace;font-size:11px">EW-2026-002</span></td>
+                <td>Battery</td><td>4.2 kg</td>
+                <td><span class="badge red">High</span></td>
+                <td><span class="badge amber">In Transit</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:'Space Mono',monospace;font-size:11px">EW-2026-003</span></td>
+                <td>Chemical</td><td>8.0 kg</td>
+                <td><span class="badge red" style="background:#f5e0e0;color:#6b0000">Critical</span></td>
+                <td><span class="badge amber">Logged</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:'Space Mono',monospace;font-size:11px">EW-2026-004</span></td>
+                <td>Electrical Appliance</td><td>22.0 kg</td>
+                <td><span class="badge gray">Low</span></td>
+                <td><span class="badge green">Processed</span></td>
+              </tr>
+              <tr>
+                <td><span style="font-family:'Space Mono',monospace;font-size:11px">EW-2026-005</span></td>
+                <td>Lead Acid Battery</td><td>15.3 kg</td>
+                <td><span class="badge red">High</span></td>
+                <td><span class="badge green">Disposed</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Processing Centers</span></div>
+          <div class="panel-body">
+            <div class="hazard-strip">
+              <span style="width:32px;height:32px;border-radius:6px;background:var(--eco-blue-light);display:flex;align-items:center;justify-content:center;font-size:15px">🏭</span>
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:500">Colombo E-Waste Centre</div>
+                <div style="font-size:11px;color:var(--text-faint)">Accepts: electronic, battery, electrical_appliance</div>
+              </div>
+              <span class="badge green">Active</span>
+            </div>
+            <div class="hazard-strip">
+              <span style="width:32px;height:32px;border-radius:6px;background:var(--eco-amber-light);display:flex;align-items:center;justify-content:center;font-size:15px">⚗️</span>
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:500">Ratmalana Chem Facility</div>
+                <div style="font-size:11px;color:var(--text-faint)">Accepts: chemical, pesticide, industrial_chemical</div>
+              </div>
+              <span class="badge green">Active</span>
+            </div>
+            <div class="hazard-strip">
+              <span style="width:32px;height:32px;border-radius:6px;background:var(--eco-red-light);display:flex;align-items:center;justify-content:center;font-size:15px">🏥</span>
+              <div style="flex:1">
+                <div style="font-size:13px;font-weight:500">Medical Waste Unit – NHSL</div>
+                <div style="font-size:11px;color:var(--text-faint)">Accepts: medical, pharmaceutical, biological</div>
+              </div>
+              <span class="badge green">Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header"><span class="panel-title">Compliance Audit Trail</span></div>
+        <div class="panel-body">
+          <div class="timeline">
+            <div class="timeline-item">
+              <span class="timeline-dot green"></span>
+              <div class="timeline-content">
+                <div class="timeline-label">EW-2026-004 marked as Disposed</div>
+                <div class="timeline-meta">Today 11:42 · Eng. Priya Fernando · Colombo E-Waste Centre</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot blue"></span>
+              <div class="timeline-content">
+                <div class="timeline-label">EW-2026-001 status → Processing</div>
+                <div class="timeline-meta">Today 09:15 · Officer Suresh · Auto-routed to Colombo E-Waste Centre</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot amber"></span>
+              <div class="timeline-content">
+                <div class="timeline-label">EW-2026-003 flagged CRITICAL — escalated</div>
+                <div class="timeline-meta">Yesterday 17:30 · System Alert · Ratmalana Chem Facility notified</div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-dot green"></span>
+              <div class="timeline-content">
+                <div class="timeline-label">Compliance report generated — April 2026</div>
+                <div class="timeline-meta">Yesterday 08:00 · Auto-generated · 87 items tracked · 81.6% compliance</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ ANALYTICS ══════════ -->
+    <div class="view" id="view-analytics">
+      <div class="section-header">
+        <div class="section-title">System Analytics</div>
+        <div class="topbar-time">April 2026</div>
+      </div>
+
+      <div class="two-col" style="margin-bottom:16px">
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Weekly Collection Volume</span></div>
+          <div class="chart-container" style="height:220px">
+            <canvas id="weeklyChart" role="img" aria-label="Line chart of weekly waste collection in kg">Weekly waste collection: Mon 420kg, Tue 380kg, Wed 510kg, Thu 290kg, Fri 640kg, Sat 380kg, Sun 210kg</canvas>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Monthly Eco-Points Awarded</span></div>
+          <div class="chart-container" style="height:220px">
+            <canvas id="pointsChart" role="img" aria-label="Bar chart of monthly eco points awarded">Monthly eco points: Jan 8K, Feb 12K, Mar 15K, Apr 19K</canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">E-Waste by Hazard Level</span></div>
+          <div class="chart-container" style="height:200px">
+            <canvas id="hazardChart" role="img" aria-label="Bar chart of e-waste items by hazard level">Hazard levels: Low 28, Medium 35, High 20, Critical 4</canvas>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="panel-title">Citizen Tier Distribution</span></div>
+          <div class="chart-container" style="height:200px">
+            <canvas id="tierChart" role="img" aria-label="Doughnut chart of citizen tiers">Citizen tiers: Bronze 840, Silver 366, Gold 42</canvas>
+          </div>
+          <div style="padding: 0 18px 14px; display: flex; gap: 10px; flex-wrap: wrap;">
+            <span style="display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-muted)"><span style="width: 10px; height: 10px; border-radius: 2px; background: #c4813b;"></span>Bronze 67%</span>
+            <span style="display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-muted)"><span style="width: 10px; height: 10px; border-radius: 2px; background: #888780;"></span>Silver 29%</span>
+            <span style="display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--text-muted)"><span style="width: 10px; height: 10px; border-radius: 2px; background: #c9a72a;"></span>Gold 3%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<!-- ══════════ MODALS ══════════ -->
+
+<!-- Register Bin -->
+<div class="modal-overlay" id="modal-register-bin">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Register New Smart Bin</span>
+      <span class="modal-close" onclick="closeModal('modal-register-bin')">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label>Bin ID</label><input type="text" placeholder="e.g. BIN-025"></div>
+        <div class="form-group"><label>Zone</label>
+          <select><option>Zone-A</option><option>Zone-B</option><option>Zone-C</option><option>Zone-D</option><option>Zone-E</option><option>Zone-F</option></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Waste Type</label>
+          <select><option>general</option><option>recyclable</option><option>organic</option></select>
+        </div>
+        <div class="form-group"><label>Capacity (L)</label><input type="number" placeholder="e.g. 240"></div>
+      </div>
+      <div class="form-group"><label>Address</label><input type="text" placeholder="e.g. 45 Galle Road, Colombo 03"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Latitude</label><input type="number" placeholder="6.9271" step="0.0001"></div>
+        <div class="form-group"><label>Longitude</label><input type="number" placeholder="79.8612" step="0.0001"></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn" onclick="closeModal('modal-register-bin')">Cancel</button>
+        <button class="btn primary" onclick="submitRegisterBin()">Register Bin</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Assign Dispatch Task -->
+<div class="modal-overlay" id="modal-assign-task">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Assign Collection Task</span>
+      <span class="modal-close" onclick="closeModal('modal-assign-task')">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label>Select Bins to Collect</label>
+        <div style="display:flex;flex-direction:column;gap:6px;padding:10px;border:1px solid var(--border);border-radius:var(--radius-sm)">
+          <label style="text-transform:none;font-family:'DM Sans',sans-serif;font-size:13px;display:flex;align-items:center;gap:8px"><input type="checkbox" style="width:auto"> BIN-001 — Zone-A, 85% full</label>
+          <label style="text-transform:none;font-family:'DM Sans',sans-serif;font-size:13px;display:flex;align-items:center;gap:8px"><input type="checkbox" checked style="width:auto"> BIN-003 — Zone-C, 91% full ⚠</label>
+          <label style="text-transform:none;font-family:'DM Sans',sans-serif;font-size:13px;display:flex;align-items:center;gap:8px"><input type="checkbox" style="width:auto"> BIN-005 — Zone-E, 76% full</label>
+        </div>
+      </div>
+      <div class="form-group"><label>Notes</label><textarea placeholder="e.g. Urgent collection — bins over 90%"></textarea></div>
+      <div class="form-actions">
+        <button class="btn" onclick="closeModal('modal-assign-task')">Cancel</button>
+        <button class="btn primary" onclick="submitAssignTask()">Assign to Nearest Truck</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Register Citizen -->
+<div class="modal-overlay" id="modal-register-citizen">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Register New Citizen</span>
+      <span class="modal-close" onclick="closeModal('modal-register-citizen')">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label>Full Name</label><input type="text" placeholder="e.g. Sumudu Perera"></div>
+        <div class="form-group"><label>Email</label><input type="email" placeholder="sumudu@email.com"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Phone</label><input type="text" placeholder="+94773333333"></div>
+        <div class="form-group"><label>NIC</label><input type="text" placeholder="e.g. 982341234V"></div>
+      </div>
+      <div class="form-group"><label>Address</label><input type="text" placeholder="No. 10, Temple Road, Colombo 05"></div>
+      <div class="form-actions">
+        <button class="btn" onclick="closeModal('modal-register-citizen')">Cancel</button>
+        <button class="btn primary" onclick="submitRegisterCitizen()">Register Citizen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Points -->
+<div class="modal-overlay" id="modal-add-points">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Add Eco-Points</span>
+      <span class="modal-close" onclick="closeModal('modal-add-points')">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label>Citizen ID</label><input type="text" placeholder="e.g. cit-001"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Waste Type</label>
+          <select>
+            <option value="electronic">Electronic (100 pts/kg)</option>
+            <option value="metal">Metal (60 pts/kg)</option>
+            <option value="plastic">Plastic (50 pts/kg)</option>
+            <option value="glass">Glass (40 pts/kg)</option>
+            <option value="paper">Paper (30 pts/kg)</option>
+            <option value="organic">Organic (20 pts/kg)</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Quantity (kg)</label><input type="number" placeholder="e.g. 2.5" step="0.1" min="0"></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn" onclick="closeModal('modal-add-points')">Cancel</button>
+        <button class="btn primary" onclick="submitAddPoints()">Award Points</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Log E-Waste -->
+<div class="modal-overlay" id="modal-log-ewaste">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Log Hazardous / E-Waste Item</span>
+      <span class="modal-close" onclick="closeModal('modal-log-ewaste')">✕</span>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group"><label>Waste Type</label>
+          <select>
+            <option>electronic</option><option>battery</option><option>lead_acid</option>
+            <option>lithium</option><option>chemical</option><option>pesticide</option>
+            <option>medical</option><option>pharmaceutical</option><option>electrical_appliance</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Hazard Level</label>
+          <select>
+            <option>low</option><option>medium</option><option>high</option><option>critical</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>Item Description</label><input type="text" placeholder="e.g. Laptop Computer — HP ProBook (5 units)"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Quantity</label><input type="number" placeholder="5"></div>
+        <div class="form-group"><label>Weight (kg)</label><input type="number" placeholder="12.5" step="0.1"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Source Type</label>
+          <select><option>individual</option><option>corporate</option><option>government</option><option>medical_facility</option></select>
+        </div>
+        <div class="form-group"><label>Source Name</label><input type="text" placeholder="e.g. ABC Company Ltd."></div>
+      </div>
+      <div class="form-group"><label>Compliance Notes</label><textarea placeholder="e.g. Hard drives sanitized per DoD 5220.22-M standard"></textarea></div>
+      <div class="form-group"><label>Logged By</label><input type="text" placeholder="e.g. Officer Suresh"></div>
+      <div class="form-actions">
+        <button class="btn" onclick="closeModal('modal-log-ewaste')">Cancel</button>
+        <button class="btn primary" onclick="submitLogEwaste()">Log Item</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ─── CLOCK ───
+function updateClock() {
+  const now = new Date();
+  document.getElementById('clock').textContent = now.toLocaleTimeString('en-GB');
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// ─── NAVIGATION ───
+const viewTitles = {
+  dashboard: 'Dashboard Overview',
+  bins: 'Smart Bin Management',
+  dispatch: 'Logistics & Dispatch',
+  citizens: 'Citizen Engagement & Rewards',
+  ewaste: 'Hazardous & E-Waste Tracker',
+  analytics: 'Analytics & Reports'
+};
+
+const topbarActions = {
+  dashboard: { label: '+ Register Bin', fn: () => openModal('modal-register-bin') },
+  bins: { label: '+ Register Bin', fn: () => openModal('modal-register-bin') },
+  dispatch: { label: '+ Assign Task', fn: () => openModal('modal-assign-task') },
+  citizens: { label: '+ Register Citizen', fn: () => openModal('modal-register-citizen') },
+  ewaste: { label: '+ Log E-Waste', fn: () => openModal('modal-log-ewaste') },
+  analytics: { label: 'Export Report', fn: () => showToast('Report exported as PDF') }
+};
+
+let currentView = 'dashboard';
+
+function switchView(view, el) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  if (el) el.classList.add('active');
+  document.getElementById('page-title').textContent = viewTitles[view];
+  const action = topbarActions[view];
+  const btn = document.getElementById('topbar-action');
+  btn.textContent = action.label;
+  currentView = view;
+  if (view === 'analytics') initAnalyticsCharts();
+}
+
+function handleTopbarAction() {
+  topbarActions[currentView].fn();
+}
+
+// ─── BIN DATA ───
+const bins = [
+  { id: 'BIN-001', location: '45 Main St, Colombo 01', zone: 'Zone-A', type: 'general', fill: 85 },
+  { id: 'BIN-002', location: '12 Galle Rd, Colombo 02', zone: 'Zone-A', type: 'recyclable', fill: 42 },
+  { id: 'BIN-003', location: '7 Union Pl, Kollupitiya', zone: 'Zone-C', type: 'organic', fill: 91 },
+  { id: 'BIN-004', location: '88 Baseline Rd, Borella', zone: 'Zone-D', type: 'general', fill: 28 },
+  { id: 'BIN-005', location: '3 Templers Rd, Wellawatte', zone: 'Zone-E', type: 'recyclable', fill: 76 },
+  { id: 'BIN-006', location: '19 Station Rd, Dehiwala', zone: 'Zone-F', type: 'organic', fill: 33 },
+  { id: 'BIN-007', location: '56 Dutugemunu St, Dehiwala', zone: 'Zone-F', type: 'general', fill: 55 },
+  { id: 'BIN-008', location: '22 High Level Rd, Nugegoda', zone: 'Zone-B', type: 'recyclable', fill: 61 },
+  { id: 'BIN-009', location: '4 Parliament Rd, Kotte', zone: 'Zone-B', type: 'organic', fill: 18 },
+  { id: 'BIN-010', location: '101 Lotus Rd, Colombo 01', zone: 'Zone-A', type: 'general', fill: 47 },
+  { id: 'BIN-011', location: '33 Park St, Colombo 02', zone: 'Zone-A', type: 'recyclable', fill: 82 },
+  { id: 'BIN-012', location: '77 Sangaraja Mawatha', zone: 'Zone-C', type: 'organic', fill: 64 },
+];
+
+function getFillColor(pct) {
+  if (pct >= 80) return '#e53e3e';
+  if (pct >= 60) return '#c47a1c';
+  return '#2daa66';
+}
+
+function renderBins(filter) {
+  const grid = document.getElementById('bin-grid');
+  const filtered = filter && filter !== 'all'
+    ? bins.filter(b => filter === 'full' ? b.fill >= 80 : b.type === filter)
+    : bins;
+  grid.innerHTML = filtered.map(b => `
+    <div class="bin-card">
+      <div class="bin-id">${b.id} · ${b.zone}</div>
+      <div class="bin-location">${b.location}</div>
+      <div style="margin-bottom:6px">
+        <span class="badge ${b.type === 'recyclable' ? 'teal' : b.type === 'organic' ? 'green' : 'gray'}" style="font-size:10px">${b.type}</span>
+      </div>
+      <div class="fill-bar-wrap">
+        <div class="fill-bar" style="width:${b.fill}%;background:${getFillColor(b.fill)}"></div>
+      </div>
+      <div class="fill-info">
+        <span class="fill-pct" style="color:${getFillColor(b.fill)}">${b.fill}%</span>
+        ${b.fill >= 80 ? '<span class="badge red" style="font-size:10px;padding:2px 6px">FULL</span>' : ''}
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterBins(type, el) {
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderBins(type);
+}
+
+renderBins();
+
+// ─── CITIZENS LIST ───
+const citizens = [
+  { id: 'CIT-001', name: 'Amara Wijesinghe', email: 'amara@email.com', points: 4820, tier: 'gold' },
+  { id: 'CIT-002', name: 'Ravi Perera', email: 'ravi.p@email.com', points: 3150, tier: 'gold' },
+  { id: 'CIT-003', name: 'Nimal Silva', email: 'nimal@email.com', points: 2400, tier: 'silver' },
+  { id: 'CIT-004', name: 'Kanchana Fernando', email: 'kfernando@email.com', points: 1870, tier: 'silver' },
+  { id: 'CIT-005', name: 'Sumudu Jayawardena', email: 'sumuduj@email.com', points: 940, tier: 'bronze' },
+  { id: 'CIT-006', name: 'Dilini Rathnayake', email: 'dilini@email.com', points: 610, tier: 'bronze' },
+];
+
+function initials(name) {
+  return name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase();
+}
+
+document.getElementById('citizens-list').innerHTML = citizens.map(c => `
+  <div class="citizen-row">
+    <div class="citizen-avatar">${initials(c.name)}</div>
+    <div class="citizen-info">
+      <div class="citizen-name">${c.name}</div>
+      <div class="citizen-email">${c.email}</div>
+    </div>
+    <span class="tier-badge tier-${c.tier}">${c.tier.charAt(0).toUpperCase() + c.tier.slice(1)}</span>
+    <span class="citizen-pts">${c.points.toLocaleString()} pts</span>
+  </div>
+`).join('');
+
+// ─── CHARTS ───
+const fillCtx = document.getElementById('fillChart').getContext('2d');
+new Chart(fillCtx, {
+  type: 'bar',
+  data: {
+    labels: ['Zone-A\nBIN-001', 'Zone-A\nBIN-002', 'Zone-C\nBIN-003', 'Zone-D\nBIN-004', 'Zone-E\nBIN-005', 'Zone-F\nBIN-006'],
+    datasets: [{
+      label: 'Fill Level %',
+      data: [85, 42, 91, 28, 76, 33],
+      backgroundColor: [
+        'rgba(229,62,62,0.8)', 'rgba(45,170,102,0.8)', 'rgba(229,62,62,0.9)',
+        'rgba(45,170,102,0.7)', 'rgba(196,122,28,0.8)', 'rgba(45,170,102,0.7)'
+      ],
+      borderRadius: 4,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { min: 0, max: 100, ticks: { callback: v => v + '%', font: { size: 11 }, color: '#8a9b90' }, grid: { color: 'rgba(0,0,0,0.05)' } },
+      x: { ticks: { font: { size: 10 }, color: '#8a9b90' }, grid: { display: false } }
+    }
+  }
+});
+
+const wtCtx = document.getElementById('wasteTypeChart').getContext('2d');
+new Chart(wtCtx, {
+  type: 'doughnut',
+  data: {
+    labels: ['Recyclable', 'General', 'Organic'],
+    datasets: [{
+      data: [40, 35, 25],
+      backgroundColor: ['#2daa66', '#1e5fa8', '#c47a1c'],
+      borderWidth: 2,
+      borderColor: '#ffffff'
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    cutout: '65%'
+  }
+});
+
+let analyticsInited = false;
+function initAnalyticsCharts() {
+  if (analyticsInited) return;
+  analyticsInited = true;
+
+  new Chart(document.getElementById('weeklyChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      datasets: [{
+        label: 'Waste Collected (kg)',
+        data: [420, 380, 510, 290, 640, 380, 210],
+        borderColor: '#1a7a4a',
+        backgroundColor: 'rgba(26,122,74,0.08)',
+        borderWidth: 2,
+        tension: 0.4,
+        fill: true,
+        pointRadius: 4,
+        pointBackgroundColor: '#1a7a4a'
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { ticks: { callback: v => v + ' kg', font: { size: 11 }, color: '#8a9b90' }, grid: { color: 'rgba(0,0,0,0.05)' } },
+        x: { ticks: { font: { size: 11 }, color: '#8a9b90' }, grid: { display: false } }
+      }
+    }
+  });
+
+  new Chart(document.getElementById('pointsChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: ['Jan', 'Feb', 'Mar', 'Apr'],
+      datasets: [{
+        label: 'Eco-Points Awarded',
+        data: [8000, 12000, 15000, 19000],
+        backgroundColor: 'rgba(196,122,28,0.75)',
+        borderRadius: 5,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { ticks: { callback: v => (v/1000) + 'K', font: { size: 11 }, color: '#8a9b90' }, grid: { color: 'rgba(0,0,0,0.05)' } },
+        x: { ticks: { font: { size: 11 }, color: '#8a9b90' }, grid: { display: false } }
+      }
+    }
+  });
+
+  new Chart(document.getElementById('hazardChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: ['Low', 'Medium', 'High', 'Critical'],
+      datasets: [{
+        label: 'Items',
+        data: [28, 35, 20, 4],
+        backgroundColor: ['rgba(45,170,102,0.8)', 'rgba(196,122,28,0.8)', 'rgba(229,62,62,0.8)', 'rgba(105,0,0,0.85)'],
+        borderRadius: 5,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { ticks: { font: { size: 11 }, color: '#8a9b90' }, grid: { color: 'rgba(0,0,0,0.05)' } },
+        x: { ticks: { font: { size: 11 }, color: '#8a9b90' }, grid: { display: false } }
+      }
+    }
+  });
+
+  new Chart(document.getElementById('tierChart').getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Bronze', 'Silver', 'Gold'],
+      datasets: [{
+        data: [840, 366, 42],
+        backgroundColor: ['#c4813b', '#888780', '#c9a72a'],
+        borderWidth: 2, borderColor: '#ffffff'
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      cutout: '60%'
+    }
+  });
+}
+
+// ─── MODALS ───
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+  });
+});
+
+// ─── TOAST ───
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── FORM HANDLERS ───
+function submitRegisterBin() {
+  closeModal('modal-register-bin');
+  showToast('✓ Bin registered successfully');
+}
+
+function submitAssignTask() {
+  closeModal('modal-assign-task');
+  showToast('✓ Task assigned to nearest available truck');
+}
+
+function submitRegisterCitizen() {
+  closeModal('modal-register-citizen');
+  showToast('✓ Citizen registered with Bronze tier & First Recycler badge');
+}
+
+function submitAddPoints() {
+  closeModal('modal-add-points');
+  showToast('✓ Eco-Points awarded successfully');
+}
+
+function submitLogEwaste() {
+  closeModal('modal-log-ewaste');
+  showToast('✓ E-Waste logged — tracking code assigned');
+}
+
+function completeTask(id) {
+  showToast('✓ Task ' + id + ' marked as completed');
+}
+
+// Update bin badge count
+document.getElementById('badge-bins').textContent = bins.filter(b => b.fill >= 80).length;
+</script>
+</body>
+</html>
